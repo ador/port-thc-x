@@ -1,24 +1,23 @@
 import numpy as np
-import scipy
 from scipy.stats import t
 import numpy.ma as ma
-import matplotlib.pylab as plt
 
 
-## Original source: https://github.com/sczesla/PyAstronomy/blob/master/src/pyasl/asl/outlier.py
-## a bit modified (just syntatctically) by ador@protonmail.com
+# Original source coped from:
+# https://github.com/sczesla/PyAstronomy/blob/master/src/pyasl/asl/outlier.py
+# a bit modified (just syntatctically) by ador@protonmail.com
 
 def generalizedESD(x, maxOLs, alpha=0.05, fullOutput=False):
     """
       Carry out a Generalized ESD Test for Outliers.
-      
+
       The Generalized Extreme Studentized Deviate (ESD) test for
       outliers can be used to search for outliers in a univariate
       data set, which approximately follows a normal distribution.
       A description of the algorithm is, e.g., given at
-      `Nist <http://www.itl.nist.gov/div898/handbook/eda/section3/eda35h3.htm>`_
+      `Nist <http://www.itl.nist.gov/div898/handbook/eda/section3/eda35h3.htm>`
       or [Rosner1983]_.
-      
+
       Parameters
       ----------
       maxOLs : int
@@ -28,7 +27,7 @@ def generalizedESD(x, maxOLs, alpha=0.05, fullOutput=False):
       fullOutput : boolean, optional
           Determines whether additional return values
           are provided. Default is False.
-      
+
       Returns
       -------
       Number of outliers : int
@@ -43,13 +42,12 @@ def generalizedESD(x, maxOLs, alpha=0.05, fullOutput=False):
       L : list of floats, optional
           The lambda values needed to test whether a point
           should be regarded an outlier. Only provided
-          if `fullOutput` is set to True.  
-      
+          if `fullOutput` is set to True.
     """
 
     if maxOLs < 1:
-        raise(PE.PyAValError("Maximum number of outliers, `maxOLs`, must be > 1.", \
-            solution="Specify, e.g., maxOLs = 2"))
+        raise(Exception("Max number of outliers, `maxOLs`, must be > 1.\n" +
+                        "Specify, e.g., maxOLs = 2"))
     xm = ma.array(x)
     n = len(xm)
     # Compute R-values
@@ -93,4 +91,3 @@ def generalizedESD(x, maxOLs, alpha=0.05, fullOutput=False):
             return 0, []
         else:
             return 0, [], R, L, minds
-
