@@ -11,7 +11,7 @@ MAINTAINER Adrienn Szabo "ador@protonmail.com"
 # use bash
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
-RUN apt-get update && apt-get install -yq unzip wget git ssh nano curl less
+RUN apt-get update && apt-get install -yq sudo unzip wget git ssh nano curl less
 
 RUN pip install --upgrade pip
 RUN pip install 'matplotlib>=1.5.3'
