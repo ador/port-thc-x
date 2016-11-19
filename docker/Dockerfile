@@ -14,11 +14,10 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN apt-get update && apt-get install -yq unzip wget git ssh nano curl less
 
 RUN pip install --upgrade pip
-RUN pip install matplotlib
-RUN pip install seaborn
-RUN pip install scikit-learn
-RUN pip install scipy
-RUN pip install pytest
+RUN pip install 'matplotlib>=1.5.3'
+RUN pip install 'seaborn>=0.7.1'
+RUN pip install 'scikit-learn>=0.18.1'
+RUN pip install 'pytest>=3.0.4'
 
 # create non-root but sudoer user "yoda"
 RUN useradd -ms /bin/bash yoda
