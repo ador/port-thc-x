@@ -1,3 +1,4 @@
 {
-    "datafile": "/home/adri/hub/port-thc-x/data/sample_data_1.json"
+    "datafile": "/home/adri/hub/port-thc-x/data/sample_data_1.json",
+    "max_outlier_percent": 33
 }

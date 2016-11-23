@@ -1,4 +1,5 @@
 import json
+import outlierdetect.gen_esd as esd
 
 
 class PortData (object):
@@ -44,6 +45,7 @@ class PortData (object):
             return self.labeled_data_by_country[countrycode]
 
     def label_data(self, countrycode):
+        print(self.settings["max_outlier_percent"])
         datalist = self.data_by_country[countrycode]
         # reset
         self.labeled_data_by_country[countrycode] = []
