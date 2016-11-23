@@ -105,5 +105,17 @@
  {"currency": "USD",
  "supplier_id": 99,
  "port": "USGPP",
- "value": 1580.0}
+ "value": 1580.0},
+ {"currency": "USD",
+ "supplier_id": 19,
+ "port": "CNAxx",
+ "value": 810.0},
+ {"currency": "USD",
+ "supplier_id": 21,
+ "port": "CNAxx",
+ "value": 812.0},
+ {"currency": "USD",
+ "supplier_id": 20,
+ "port": "CNAxx",
+ "value": 805.0}
 ]

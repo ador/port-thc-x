@@ -12,23 +12,23 @@ def setup_port_data_1():
 
 
 def test_get_countrycodes():
-    poda = setupPortData()
+    poda = setup_port_data_1()
     countrycodes = poda.get_countrycodes()
     assert(3 == len(countrycodes))
     assert(['CN', 'HU', 'US'] == countrycodes)
 
 
 def test_get_labeled_data_for_country_OK():
-    poda = setupPortData()
+    poda = setup_port_data_1()
     labeled = poda.get_labeled_data_for_country("CN")
-    assert(10 == len(labeled))
-    assert('CNY' == labeled[0]['currency'])
+    assert(7 == len(labeled))
+    assert('USD' == labeled[0]['currency'])
     assert('OK' == labeled[0]['label'])
 
 
 def test_get_labeled_data_for_country_OUTLIER():
     # Note: test data is prepared such that 'supplier_id' is 99 for outliers
-    poda = setupPortData()
+    poda = setup_port_data_1()
     labeled = poda.get_labeled_data_for_country("CN")
     print(" -- " + str(labeled))
     should_be_outliers = [d for d in labeled if d['supplier_id'] == 99]
