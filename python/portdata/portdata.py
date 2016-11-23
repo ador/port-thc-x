@@ -1,5 +1,6 @@
 import json
 import outlierdetect.gen_esd as esd
+import numpy as np
 
 
 class PortData (object):
@@ -9,8 +10,12 @@ class PortData (object):
         self.countrycodes = set([])
         self.last_rates_timestamp = 0  # todo
         self.orig_data = dict()
+        # the following dictionaries' key is countrycode
+        # and the value is a sorted list (by usd_value) of data items
         self.data_by_country = dict()
-        self.labeled_data_by_country = dict()
+        self.labeled_data = dict()
+        # computed histogram data with outliers separated
+        self.histograms = dict()
         # todo: a currency handler
 
     def apply_settings(self, settingsfile):
@@ -40,30 +45,54 @@ class PortData (object):
 
     def get_labeled_data_for_country(self, countrycode):
         cc = countrycode
-        if cc not in self.labeled_data_by_country:
-            self.label_data(cc)
-        return self.labeled_data_by_country[cc]
+        if cc not in self.labeled_data:
+            self.labeled_data[cc] = self.label_data(cc)
+        return self.labeled_data[cc]
 
     def label_data(self, countrycode):
         # reset previous
-        self.labeled_data_by_country[countrycode] = []
+        self.labeled_data[countrycode] = []
         # data to be labeled
         datalist = self.get_orig_data_for_country(countrycode)
+        labeled_data = []
         # default: OK
         for data in datalist:
             data['label'] = 'OK'
-            self.labeled_data_by_country[countrycode].append(data)
-        # re-label outliers:
-        # todo: convert currencies
-        # ...tmp solution: assume USD
-        usd_values = [d['value'] for d in datalist]
+            data['usd_val'] = self.compute_usd_value(data['currency'],
+                                                     data['value'])
+            labeled_data.append(data)
+        # reorder labeled_data list based on usd_value
+        labeled_data = sorted(labeled_data, key=lambda data: data['usd_val'])
+        usd_values = [d['usd_val'] for d in labeled_data]
         outlier_indices = self.compute_outliers(usd_values)
+        # re-label outliers:
         for i in outlier_indices:
-            self.labeled_data_by_country[countrycode][i]['label'] = 'OUTLIER'
+            labeled_data[i]['label'] = 'OUTLIER'
+        return labeled_data
 
     def compute_outliers(self, usd_values):
-        # how many outliers are we searching maximum
+        # how many outliers are we searching (maximum)
         max_outlier_percent = self.settings["max_outlier_percent"]
         max_outlier_num = int(len(usd_values) * (max_outlier_percent / 100.0))
         (num_ols, index_list) = esd.generalizedESD(usd_values, max_outlier_num)
         return index_list
+
+    def get_labeled_histogram_for_country(self, countrycode, bins):
+        cc = countrycode
+        if cc not in self.histograms:
+            self.histograms[cc] = self.create_labeled_histogram(cc, bins)
+        return self.histograms[cc]
+
+    def create_labeled_histogram(self, countrycode, num_bins):
+        data = self.get_labeled_data_for_country(countrycode)
+        # note: we expect this to be sorted!
+        usd_values = [d['usd_val'] for d in data]
+        assert(usd_values == sorted(usd_values))
+        # outlier_idx_list = self.compute_outliers(usd_values)
+        (hist_vals, hist_borders) = np.histogram(usd_values, num_bins)
+        # TODO compute the histogram 
+        return None
+
+    def compute_usd_value(self, from_currency, value):
+        # TODO use a separate currency handler class
+        return value

@@ -19,11 +19,13 @@ def test_get_countrycodes():
 
 
 def test_get_labeled_data_for_country_OK():
+    # Note: test data is prepared such that 'supplier_id' is 99 for outliers
     poda = setup_port_data_1()
     labeled = poda.get_labeled_data_for_country("CN")
     assert(7 == len(labeled))
     assert('USD' == labeled[0]['currency'])
-    assert('OK' == labeled[1]['label'])
+    assert(99 != labeled[3]['supplier_id'])
+    assert('OK' == labeled[3]['label'])
 
 
 def test_get_labeled_data_for_country_OUTLIER():
@@ -34,3 +36,11 @@ def test_get_labeled_data_for_country_OUTLIER():
     assert(2 == len(should_be_outliers))
     for ol in should_be_outliers:
         assert('OUTLIER' == ol['label'])
+
+
+def test_histogram():
+    poda = setup_port_data_1()
+    num_bins = 3
+    histogram = poda.get_labeled_histogram_for_country("CN", num_bins)
+    #assert(num_bins == len(histogram))
+
