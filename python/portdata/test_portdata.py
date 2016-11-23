@@ -5,9 +5,9 @@ import os
 this_dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
-def setupPortData():
+def setup_port_data_1():
     poda = PortData()
-    poda.apply_settings(this_dir_path + "/../test_settings.json")
+    poda.apply_settings(this_dir_path + "/../test_settings1.json")
     return poda
 
 
@@ -26,10 +26,12 @@ def test_get_labeled_data_for_country_OK():
     assert('OK' == labeled[0]['label'])
 
 
-# def test_get_labeled_data_for_country_OUTLIER():
-    # TODO 
-    # test data is prepared such that 'supplier_id' is 99 for outliers
-    # assert('OUTLIER' == labeled[x]['label'])
-
-
-# TODO later
+def test_get_labeled_data_for_country_OUTLIER():
+    # Note: test data is prepared such that 'supplier_id' is 99 for outliers
+    poda = setupPortData()
+    labeled = poda.get_labeled_data_for_country("CN")
+    print(" -- " + str(labeled))
+    should_be_outliers = [d for d in labeled if d['supplier_id'] == 99]
+    assert(2 == len(should_be_outliers))
+    for ol in should_be_outliers:
+        assert('OUTLIER' == ol['label'])
