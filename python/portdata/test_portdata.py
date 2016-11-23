@@ -38,9 +38,42 @@ def test_get_labeled_data_for_country_OUTLIER():
         assert('OUTLIER' == ol['label'])
 
 
-def test_histogram():
+def test_histogram_1():
     poda = setup_port_data_1()
     num_bins = 3
     histogram = poda.get_labeled_histogram_for_country("CN", num_bins)
-    #assert(num_bins == len(histogram))
+    assert(num_bins == len(histogram))
 
+    assert(histogram[0]['label'] == '60.00 - 318.33')
+    assert(histogram[0]['normal'] == 0)
+    assert(histogram[0]['outlier'] == 2)
+
+    assert(histogram[1]['label'] == '318.33 - 576.67')
+    assert(histogram[1]['normal'] == 0)
+    assert(histogram[1]['outlier'] == 0)
+
+    assert(histogram[2]['label'] == '576.67 - 835.00')
+    assert(histogram[2]['normal'] == 5)
+    assert(histogram[2]['outlier'] == 0)
+
+
+def test_histogram_2():
+    poda = setup_port_data_1()
+    num_bins = 5
+    histogram = poda.get_labeled_histogram_for_country("CN", num_bins)
+    assert(num_bins == len(histogram))
+
+    assert(histogram[0]['label'] == '60.00 - 215.00')
+    assert(histogram[0]['normal'] == 0)
+    assert(histogram[0]['outlier'] == 2)
+
+    assert(histogram[1]['normal'] == 0)
+    assert(histogram[1]['outlier'] == 0)
+    assert(histogram[2]['normal'] == 0)
+    assert(histogram[2]['outlier'] == 0)
+    assert(histogram[3]['normal'] == 0)
+    assert(histogram[3]['outlier'] == 0)
+
+    assert(histogram[4]['label'] == '680.00 - 835.00')
+    assert(histogram[4]['normal'] == 5)
+    assert(histogram[4]['outlier'] == 0)
