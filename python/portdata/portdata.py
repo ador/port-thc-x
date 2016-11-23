@@ -11,6 +11,7 @@ class PortData (object):
         self.orig_data = dict()
         self.data_by_country = dict()
         self.labeled_data_by_country = dict()
+        # todo: a currency handler
 
     def apply_settings(self, settingsfile):
         with open(settingsfile, 'r') as f:
@@ -38,19 +39,31 @@ class PortData (object):
         return self.data_by_country[countrycode]
 
     def get_labeled_data_for_country(self, countrycode):
-        if countrycode in self.labeled_data_by_country:
-            return self.labeled_data_by_country[countrycode]
-        else:
-            self.label_data(countrycode)
-            return self.labeled_data_by_country[countrycode]
+        cc = countrycode
+        if cc not in self.labeled_data_by_country:
+            self.label_data(cc)
+        return self.labeled_data_by_country[cc]
 
     def label_data(self, countrycode):
-        print(self.settings["max_outlier_percent"])
-        datalist = self.data_by_country[countrycode]
-        # reset
+        # reset previous
         self.labeled_data_by_country[countrycode] = []
-        # TODO : call outlier detector code here and use labels accordingly
-        for d in datalist:
-            d['label'] = 'OK'
-            self.labeled_data_by_country[countrycode].append(d)
+        # data to be labeled
+        datalist = self.get_orig_data_for_country(countrycode)
+        # default: OK
+        for data in datalist:
+            data['label'] = 'OK'
+            self.labeled_data_by_country[countrycode].append(data)
+        # re-label outliers:
+        # todo: convert currencies
+        # ...tmp solution: assume USD
+        usd_values = [d['value'] for d in datalist]
+        outlier_indices = self.compute_outliers(usd_values)
+        for i in outlier_indices:
+            self.labeled_data_by_country[countrycode][i]['label'] = 'OUTLIER'
 
+    def compute_outliers(self, usd_values):
+        # how many outliers are we searching maximum
+        max_outlier_percent = self.settings["max_outlier_percent"]
+        max_outlier_num = int(len(usd_values) * (max_outlier_percent / 100.0))
+        (num_ols, index_list) = esd.generalizedESD(usd_values, max_outlier_num)
+        return index_list
