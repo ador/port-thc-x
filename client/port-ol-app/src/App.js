@@ -12,6 +12,7 @@ import DropdownItem from 'muicss/lib/react/dropdown-item';
 class App extends Component {
   countrycode = "US"
 
+  // TODO replace this with data got from the python server (fetch)
   data = [
       {label: '10.0 - 16.2', outlier: 9, normal: 0},
       {label: '16.2 - 22.4', outlier: 5, normal: 5},
@@ -24,34 +25,6 @@ class App extends Component {
   getSelectedCountry() {
     return "CN"
   }
-
-  fetchHistogram(){
-    var ccode = this.getSelectedCountry();
-    //var endPoint = 'http://localhost:5000/histogram/CN';
-    var endPoint = 'http://ip.jsontest.com/';
-    console.log("sending in GET query to " + endPoint);
-
-
-    fetch(endPoint, {'mode': 'no-cors',  'method': 'GET', 'Accept': 'application/json'}).then(function(response) {
-        var contentType = response.headers.get("Content-Type");
-        console.log(" HHIII headers: " + response.headers);
-        console.log(" HHIII contentType: " + contentType);
-        console.log(" -- resp status : " + response.status + " is ok? " + response.ok);
-        if(contentType && contentType.indexOf("application/json") !== -1) {
-            console.log("   JSON !!! ");
-            // process your JSON further
-            return response.json()
-        } else {
-          console.log("Oops, we haven't got JSON!");
-          console.log("resp status: " + response.status);
-        }
-      }).then(function(json) {
-        console.log('parsed json', json)
-      }).catch(function(ex) {
-        console.log('parsing failed', ex)
-    })
-  }
-  
 
   render() {
     return (
@@ -72,7 +45,7 @@ class App extends Component {
             <Button className="mui-btn" color="primary" onClick={(event)=>this.log(event)}>Show data</Button>
           </div>
           <div className="App-intro">
-            <SimpleBarChart data={this.fetchHistogram()}/>
+            <SimpleBarChart data={this.data}/>
           </div>
         </div>
       </div>
@@ -80,11 +53,9 @@ class App extends Component {
   }
 
   log(event) {
-    
-      console.log("hello !! ")
-      this.fetchHistogram();
-    
+      console.log("something should change here!")
   }
+
 }
 
 export default App;
