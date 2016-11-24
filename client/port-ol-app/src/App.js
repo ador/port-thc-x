@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import logo from './logo.png';
+import logo from './alogo.png';
 import './App.css';
 import SimpleBarChart from './SimpleBarChart.js';
 
