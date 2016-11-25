@@ -8,7 +8,6 @@ class RateConverter (object):
         A configuration settings file can define N, among other parameters.
     """
 
-
     def __init__(self):
         self.settings = dict()
         self.currencies = []
@@ -19,7 +18,7 @@ class RateConverter (object):
         with open(settingsfile, 'r') as f:
             self.settings = json.loads(f.read())
             self.read_currencies(self.settings['common_path'] +
-                                 self.settings['currency_list_file'])
+                                 self.settings['fallback_currency_file'])
             if "currency_conversion_precision" in self.settings:
                 self.precision = self.settings["currency_conversion_precision"]
             f.close()
