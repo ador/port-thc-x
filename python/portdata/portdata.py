@@ -6,7 +6,7 @@ import numpy as np
 class PortData (object):
 
     def __init__(self):
-        self.settings = dict()
+        self.settings = None
         self.countrycodes = set([])
         self.last_rates_timestamp = 0  # todo
         self.orig_data = dict()

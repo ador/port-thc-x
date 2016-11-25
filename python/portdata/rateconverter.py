@@ -9,7 +9,7 @@ class RateConverter (object):
     """
 
     def __init__(self):
-        self.settings = dict()
+        self.settings = None
         self.currencies = []
         self.rates = dict()
         self.precision = 2
@@ -44,5 +44,3 @@ class RateConverter (object):
             return round(value, self.precision)
         else:
             return round(1.0 * value / self.rates[from_currency], self.precision)
-
- 

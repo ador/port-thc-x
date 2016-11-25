@@ -18,7 +18,6 @@ def test_available_currencies():
     assert('CNY' in currencies)
     assert('HUF' in currencies)
     assert('NOK' in currencies)
-    
 
 
 def test_convert_USD():
