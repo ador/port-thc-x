@@ -6,5 +6,11 @@
     "max_histogram_bins":50,
 
     "currency_list_file": "data/currencies_for_test.json",
-    "currency_conversion_precision": 1
+    "currency_conversion_precision": 1,
+
+    "fetch-rates": {
+        "base_url": "",
+        "app_id": "2d91dd91a7e53c3b927890115c7f6231",
+        "refresh_seconds": 86400
+    }
 }
