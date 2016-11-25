@@ -21,7 +21,8 @@ class PortData (object):
     def apply_settings(self, settingsfile):
         with open(settingsfile, 'r') as f:
             self.settings = json.loads(f.read())
-            self.read_data(self.settings['datafile'])
+            self.read_data(self.settings['common_path'] +
+                           self.settings['datafile'])
             f.close()
 
     def read_data(self, filename):

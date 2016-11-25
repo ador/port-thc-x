@@ -1,0 +1,12 @@
+{
+  "disclaimer": "Exchange rates provided for informational purposes only and do not constitute financial advice of any kind. Although every attempt is made to ensure quality, no guarantees are made of accuracy, validity, availability, or fitness for any purpose. All usage subject to acceptance of Terms: https://openexchangerates.org/terms/",
+  "license": "Data sourced from various providers; resale prohibited; no warranties given of any kind. All usage subject to License Agreement: https://openexchangerates.org/license/",
+  "timestamp": 1480071608,
+  "base": "USD",
+  "rates": {
+    "CNY": 6.919257,
+    "HUF": 292.810601,
+    "NOK": 8.578353,
+    "USD": 1,
+  }
+}
