@@ -4,9 +4,12 @@ from flask_cors import CORS, cross_origin
 from flask import Flask, Response, jsonify
 
 
+
 app = Flask(__name__)
 poda = None
 this_dir_path = os.path.dirname(os.path.realpath(__file__))
+
+cors = CORS(app)
 
 
 def setup_port_data():
@@ -16,6 +19,7 @@ def setup_port_data():
 
 
 @app.route('/', methods=['GET', 'OPTIONS'])
+@cross_origin(origin='*', headers=['Content-Type'])
 def hello_world():
     return 'Hello, World!'
 

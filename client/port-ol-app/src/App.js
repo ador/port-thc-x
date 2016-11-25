@@ -21,6 +21,9 @@ class App extends Component {
       {label: '34.8 - 49  .0', outlier: 0, normal: 50}
   ]
 
+  getData() {
+    return this.data
+  }
 
   getSelectedCountry() {
     return "CN"
@@ -45,7 +48,7 @@ class App extends Component {
             <Button className="mui-btn" color="primary" onClick={(event)=>this.log(event)}>Show data</Button>
           </div>
           <div className="App-intro">
-            <SimpleBarChart data={this.data}/>
+            <SimpleBarChart data={this.getData()}/>
           </div>
         </div>
       </div>
@@ -53,7 +56,34 @@ class App extends Component {
   }
 
   log(event) {
-      console.log("something should change here!")
+      console.log("something should change here!");
+      this.fetchData();
+  }
+
+  updateData(data) {
+    this.data = data
+  }
+
+  fetchData() {
+    // WIP, infinite loop... 
+    console.log(" hya");
+
+    
+    var newdata = 
+      fetch('/histogram/CN', 
+         {'method': 'GET'}
+         ).then(function(response) { 
+          console.log(response);
+          // Convert to JSON
+          
+          return response.json();
+      }).then(function(j) {
+      // Yay, `j` is a JavaScript object
+      console.log(j); 
+      });
+
+      this.updateData(newdata);
+      this.render();
   }
 
 }
