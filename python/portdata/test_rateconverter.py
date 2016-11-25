@@ -11,10 +11,9 @@ def setup_converter_1():
     return conv
 
 
-def test_convert_1():
+def test_available_currencies():
     conv = setup_converter_1()
     currencies = conv.get_available_currencies()
-    #assert(3 == len(currencies))
-    #assert(['CNY', 'HUF', 'USD'] == currencies)
-
+    assert(4 == len(currencies))
+    assert(['CNY', 'HUF', 'NOK', 'USD'] == currencies)
 
