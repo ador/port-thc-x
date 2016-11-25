@@ -1,9 +1,10 @@
 {
-    "common_path" : "/home/adri/hub/port-thc-x/",
+    "common_path": "/home/adri/hub/port-thc-x/",
     "datafile": "data/sample_data_1.json",
     "max_outlier_percent": 33,
-    "min_histogram_bins" : 3,
-    "max_histogram_bins" :50,
+    "min_histogram_bins": 3,
+    "max_histogram_bins":50,
 
-    "currency_list_file" : "data/currencies_for_test.json"
+    "currency_list_file": "data/currencies_for_test.json",
+    "currency_conversion_precision": 1
 }
