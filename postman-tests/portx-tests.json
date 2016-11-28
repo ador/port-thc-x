@@ -83,7 +83,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"currency\": \"USD\", \"value\": \"24\", \"port\": \"USDsgw\", \"supplier_id\": \"sef245\"}"
+					"raw": "{\"currency\": \"USD\", \"value\": 24, \"port\": \"USsdfds\", \"supplier_id\": 235}"
 				},
 				"description": ""
 			},
