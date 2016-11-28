@@ -20,8 +20,7 @@ class PortData (object):
         self.histograms = dict()
         # to keep country codes which received new data but the outlier 
         # labels were not yet recomputed
-        # TODO: use this and then remove 'label_data' calls from outside
-        self.dirty_ccodes = set()
+        self.dirty_ccodes_data = set()
         # a currency converter
         self.rate_converter = RateConverter()
 
@@ -43,6 +42,7 @@ class PortData (object):
         return self.countrycodes
 
     def add_raw_data(self, ccode, json_data):
+        self.dirty_ccodes_data.add(ccode)
         if ccode in self.countrycodes:
             self.data_by_country[ccode].append(json_data)
         else:
@@ -60,7 +60,7 @@ class PortData (object):
 
     def get_labeled_data_for_country(self, countrycode):
         cc = countrycode
-        if cc not in self.labeled_data:
+        if cc not in self.labeled_data or cc in self.dirty_ccodes_data:
             self.label_data(cc)
         return self.labeled_data[cc]
 
@@ -86,6 +86,7 @@ class PortData (object):
             self.labeled_data[countrycode] = labeled_data_sorted
         else:
             self.labeled_data[countrycode] = labeled_data
+        self.dirty_ccodes_data.discard(countrycode)
 
     def compute_outliers(self, usd_values):
         # how many outliers are we searching (maximum)
@@ -94,16 +95,21 @@ class PortData (object):
         (num_ols, index_list) = esd.generalizedESD(usd_values, max_outlier_num)
         return index_list
 
-    def get_labeled_histogram_for_country(self, countrycode, num_bins=-1):
+    def compute_histogram_for_country(self, countrycode, num_bins=-1):
+        cc = countrycode
+        if cc not in self.labeled_data or cc in self.dirty_ccodes_data:
+            self.label_data(cc)
         if -1 == num_bins:
             datalen = len(self.data_by_country)
             num_bins = max(min(datalen / 10,
                                self.settings['min_histogram_bins']),
                            self.settings['min_histogram_bins'])
-        cc = countrycode
-        if cc not in self.histograms:
-            self.histograms[cc] = self.create_labeled_histogram(cc, num_bins)
-        return self.histograms[cc]
+        self.histograms[cc] = self.create_labeled_histogram(cc, num_bins)
+
+    def get_labeled_histogram_for_country(self, countrycode, num_bins=-1):
+        # TODO : optimize, cache somehow
+        self.compute_histogram_for_country(countrycode, num_bins)
+        return self.histograms[countrycode]
 
     def num_outliers_in_hist_col(self, minval, maxval, data):
         return len([x for x in data if (x['usd_val'] >= minval and
@@ -142,7 +148,7 @@ class PortData (object):
         return d
 
     def create_labeled_histogram(self, countrycode, num_bins):
-        data = self.get_labeled_data_for_country(countrycode)
+        data = self.labeled_data[countrycode]
         # note: we expect this to be sorted!
         usd_values = [d['usd_val'] for d in data]
         assert(usd_values == sorted(usd_values))
