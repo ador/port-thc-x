@@ -1,8 +1,7 @@
 from portdata.portdata import PortData
 import os
 from flask_cors import CORS, cross_origin
-from flask import Flask, Response, jsonify
-
+from flask import Flask, Response
 
 
 app = Flask(__name__)
@@ -36,6 +35,21 @@ def histogram_for_country(ccode):
             'Access-Control-Allow-Origin': '*'
         }
     )
+
+
+@app.route('/upload', methods=['POST'])
+def upload_data():
+    from flask import request
+    currency = request.get_json().get('currency', '')
+    value = request.get_json().get('value')
+    supplier_id = request.get_json().get('supplier_id')
+    port = request.get_json().get('port')
+    print("received: ")
+    print("    curr: " + str(currency))
+    print("    value: " + str(value))
+    print("    supplier_id: " + str(supplier_id))
+    print("    port: " + str(port))
+    return "Thanks"
 
 
 if __name__ == '__main__':

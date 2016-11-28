@@ -29,7 +29,6 @@ class RateConverter (object):
         with open(filename, 'r') as f:
             currencies_json = json.loads(f.read())
             self.rates = currencies_json['rates']
-            print("rates :  " + str(self.rates))
             self.currencies = sorted(list(self.rates.keys()))
             f.close()
         return self.currencies

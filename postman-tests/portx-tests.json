@@ -1,0 +1,93 @@
+{
+	"variables": [],
+	"info": {
+		"name": "portx",
+		"_postman_id": "891c6e36-445d-04f2-5607-be93043950cb",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "portx-runs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Body matches string\"] = responseBody.has(\"Hello, World\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "text/plain",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": "hello world"
+			},
+			"response": []
+		},
+		{
+			"name": "portx-histo1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Body matches string\"] = responseBody.has(\"label\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/histogram/CN",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "text/plain",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": "CN "
+			},
+			"response": []
+		},
+		{
+			"name": "upload_json_data",
+			"request": {
+				"url": "localhost:5000/upload",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"currency\": \"USD\", \"value\": \"24\", \"port\": \"USDsgw\", \"supplier_id\": \"sef245\"}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
