@@ -11,12 +11,17 @@ class PortData (object):
         self.countrycodes = set([])
         self.last_rates_timestamp = 0  # todo
         self.orig_data = dict()
+        self.min_datasize_for_OLdetection = 7
         # the following dictionaries' key is countrycode
         # and the value is a sorted list (by usd_value) of data items
         self.data_by_country = dict()
         self.labeled_data = dict()
         # computed histogram data with outliers separated
         self.histograms = dict()
+        # to keep country codes which received new data but the outlier 
+        # labels were not yet recomputed
+        # TODO: use this and then remove 'label_data' calls from outside
+        self.dirty_ccodes = set()
         # a currency converter
         self.rate_converter = RateConverter()
 
@@ -33,29 +38,33 @@ class PortData (object):
             self.orig_data = json.loads(f.read())
             for elem in self.orig_data:
                 ccode = elem['port'][0:2]
-                if ccode in self.countrycodes:
-                    self.data_by_country[ccode].append(elem)
-                else:
-                    self.countrycodes.add(ccode)
-                    self.data_by_country[ccode] = [elem]
+                self.add_raw_data(ccode, elem)
             f.close()
         return self.countrycodes
+
+    def add_raw_data(self, ccode, json_data):
+        if ccode in self.countrycodes:
+            self.data_by_country[ccode].append(json_data)
+        else:
+            self.countrycodes.add(ccode)
+            self.data_by_country[ccode] = [json_data]
 
     def get_countrycodes(self):
         return sorted(list(self.countrycodes))
 
     def get_orig_data_for_country(self, countrycode):
-        return self.data_by_country[countrycode]
+        if countrycode in self.data_by_country:
+            return self.data_by_country[countrycode]
+        else:
+            return []
 
     def get_labeled_data_for_country(self, countrycode):
         cc = countrycode
         if cc not in self.labeled_data:
-            self.labeled_data[cc] = self.label_data(cc)
+            self.label_data(cc)
         return self.labeled_data[cc]
 
     def label_data(self, countrycode):
-        # reset previous
-        self.labeled_data[countrycode] = []
         # data to be labeled
         datalist = self.get_orig_data_for_country(countrycode)
         labeled_data = []
@@ -65,14 +74,18 @@ class PortData (object):
             data['usd_val'] = self.compute_usd_value(data['currency'],
                                                      data['value'])
             labeled_data.append(data)
-        # reorder labeled_data list based on usd_value
-        labeled_data = sorted(labeled_data, key=lambda data: data['usd_val'])
-        usd_values = [d['usd_val'] for d in labeled_data]
-        outlier_indices = self.compute_outliers(usd_values)
-        # re-label outliers:
-        for i in outlier_indices:
-            labeled_data[i]['label'] = 'OUTLIER'
-        return labeled_data
+        # only try to find outliers if we have a handful of datapoints at least
+        if len(datalist) >= self.min_datasize_for_OLdetection:
+            # reorder labeled_data list based on usd_value
+            labeled_data_sorted = sorted(labeled_data, key=lambda data: data['usd_val'])
+            usd_values = [data['usd_val'] for data in labeled_data_sorted]
+            outlier_indices = self.compute_outliers(usd_values)
+            # re-label outliers:
+            for i in outlier_indices:
+                labeled_data_sorted[i]['label'] = 'OUTLIER'
+            self.labeled_data[countrycode] = labeled_data_sorted
+        else:
+            self.labeled_data[countrycode] = labeled_data
 
     def compute_outliers(self, usd_values):
         # how many outliers are we searching (maximum)
@@ -150,3 +163,11 @@ class PortData (object):
     def compute_usd_value(self, from_currency, value):
         usd_val = self.rate_converter.convert_to_usd(from_currency, value)
         return usd_val
+
+    def add_dataitem(self, currency, supplier_id, value, port):
+        ccode = port[0:2]
+        data = dict(
+            currency=currency, supplier_id=supplier_id,
+            value=value, port=port
+        )
+        self.add_raw_data(ccode, data)

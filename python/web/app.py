@@ -49,6 +49,8 @@ def upload_data():
     print("    value: " + str(value))
     print("    supplier_id: " + str(supplier_id))
     print("    port: " + str(port))
+    poda.add_dataitem(currency=currency, supplier_id=supplier_id,
+                      value=value, port=port)
     return "Thanks"
 
 
