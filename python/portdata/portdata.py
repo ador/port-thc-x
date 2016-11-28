@@ -18,7 +18,7 @@ class PortData (object):
         self.labeled_data = dict()
         # computed histogram data with outliers separated
         self.histograms = dict()
-        # to keep country codes which received new data but the outlier 
+        # to keep country codes which received new data but the outlier
         # labels were not yet recomputed
         self.dirty_ccodes_data = set()
         # a currency converter
@@ -77,7 +77,8 @@ class PortData (object):
         # only try to find outliers if we have a handful of datapoints at least
         if len(datalist) >= self.min_datasize_for_OLdetection:
             # reorder labeled_data list based on usd_value
-            labeled_data_sorted = sorted(labeled_data, key=lambda data: data['usd_val'])
+            labeled_data_sorted = sorted(
+                labeled_data, key=lambda data: data['usd_val'])
             usd_values = [data['usd_val'] for data in labeled_data_sorted]
             outlier_indices = self.compute_outliers(usd_values)
             # re-label outliers:
