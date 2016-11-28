@@ -1,5 +1,6 @@
 import json
 import outlierdetect.gen_esd as esd
+from portdata.rateconverter import RateConverter
 import numpy as np
 
 
@@ -16,9 +17,11 @@ class PortData (object):
         self.labeled_data = dict()
         # computed histogram data with outliers separated
         self.histograms = dict()
-        # todo: a currency handler
+        # a currency converter
+        self.rate_converter = RateConverter()
 
     def apply_settings(self, settingsfile):
+        self.rate_converter.apply_settings(settingsfile)
         with open(settingsfile, 'r') as f:
             self.settings = json.loads(f.read())
             self.read_data(self.settings['common_path'] +
@@ -145,5 +148,5 @@ class PortData (object):
         return to_return
 
     def compute_usd_value(self, from_currency, value):
-        # TODO use a separate currency handler class
-        return value
+        usd_val = self.rate_converter.convert_to_usd(from_currency, value)
+        return usd_val

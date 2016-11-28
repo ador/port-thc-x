@@ -1,5 +1,5 @@
 import json
-import numpy as np
+from portdata.ratefetcher import RateFetcher
 
 
 class RateConverter (object):
@@ -13,8 +13,10 @@ class RateConverter (object):
         self.currencies = []
         self.rates = dict()
         self.precision = 2
+        self.fetcher = RateFetcher()
 
     def apply_settings(self, settingsfile):
+        self.fetcher.apply_settings(settingsfile)
         with open(settingsfile, 'r') as f:
             self.settings = json.loads(f.read())
             self.read_currencies(self.settings['common_path'] +
@@ -36,8 +38,7 @@ class RateConverter (object):
         return self.currencies
 
     def refresh_rate_values(self):
-        # TODO
-        pass
+        self.rates = self.fetcher.get_rates()
 
     def convert_to_usd(self, from_currency, value):
         if from_currency == "USD":
