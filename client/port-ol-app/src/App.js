@@ -9,24 +9,56 @@ import Dropdown from 'muicss/lib/react/dropdown';
 import DropdownItem from 'muicss/lib/react/dropdown-item';
 
 
-class App extends Component {
-  countrycode = "US"
+class App extends Component { 
 
-  // TODO replace this with data got from the python server (fetch)
-  data = [
-      {label: '10.0 - 16.2', outlier: 9, normal: 0},
-      {label: '16.2 - 22.4', outlier: 5, normal: 5},
-      {label: '22.4 - 28.6', outlier: 0, normal: 20},
-      {label: '28.6 - 34.8', outlier: 0, normal: 50},
-      {label: '34.8 - 49  .0', outlier: 0, normal: 50}
-  ]
+  constructor(props) {
+    super(props);
+    this.state = {
+      countrycode : "US",
+        // TODO replace this with data got from the python server (fetch)
+      data : [
+          {label: '10.0 - 16.2', outlier: 9, normal: 0},
+          {label: '16.2 - 22.4', outlier: 5, normal: 5},
+          {label: '22.4 - 28.6', outlier: 0, normal: 20},
+          {label: '28.6 - 34.8', outlier: 0, normal: 50},
+          {label: '34.8 - 49  .0', outlier: 0, normal: 50}
+      ]
+    };
+    this.handleClick = this.handleClick.bind(this);
+    this.getData = this.getData.bind(this);
+    this.fetchAndUpdateData = this.fetchAndUpdateData.bind(this);
+    this.getSelectedCountry = this.getSelectedCountry.bind(this);
+    this.setSelectedCountry = this.setSelectedCountry.bind(this);
+  }
+  
+  handleClick() {
+    // TODO
+  }
 
   getData() {
-    return this.data
+    return this.state.data;
   }
 
   getSelectedCountry() {
-    return "CN"
+    return this.state.countrycode;
+  }
+
+  setSelectedCountry(ccode) {
+    this.state.countrycode = ccode;
+  }
+
+  fetchAndUpdateData() {
+    console.log("trying to fetch data from " + '/histogram/' + this.state.countrycode );
+    var newdata = 
+      fetch('/histogram/' + this.state.countrycode, 
+         {'method': 'GET'}
+         ).then(function(response) { 
+          console.log("Response from fetch is " + response);
+          return response.json();
+      }).then(function(j) {
+        console.log(j); 
+      });
+      this.state.data = newdata;
   }
 
   render() {
@@ -38,52 +70,21 @@ class App extends Component {
         </div>
         <div className="App-intro">
           Choose countrycode! 
-          <Dropdown color="primary" label="Dropdown" onChange={this.log()}>
+          <Dropdown color="primary" label="Dropdown" onChange={this.setSelectedCountry("CN")}>
             <DropdownItem link="#/link1">Option 1</DropdownItem>
             <DropdownItem>Option 2</DropdownItem>
             <DropdownItem>Option 3</DropdownItem>
             <DropdownItem>Option 4</DropdownItem>
           </Dropdown>
           <div>
-            <Button className="mui-btn" color="primary" onClick={(event)=>this.log(event)}>Show data</Button>
+            <Button className="mui-btn" color="primary" onClick={this.fetchAndUpdateData}>Show data</Button>
           </div>
           <div className="App-intro">
-            <SimpleBarChart data={this.getData()}/>
+            <SimpleBarChart data={this.state.data}/>
           </div>
         </div>
       </div>
     );
-  }
-
-  log(event) {
-      console.log("something should change here!");
-      this.fetchData();
-  }
-
-  updateData(data) {
-    this.data = data
-  }
-
-  fetchData() {
-    // WIP, infinite loop... 
-    console.log(" hya");
-
-    
-    var newdata = 
-      fetch('/histogram/CN', 
-         {'method': 'GET'}
-         ).then(function(response) { 
-          console.log(response);
-          // Convert to JSON
-          
-          return response.json();
-      }).then(function(j) {
-      // Yay, `j` is a JavaScript object
-      console.log(j); 
-      });
-
-      this.updateData(newdata);
-      this.render();
   }
 
 }
