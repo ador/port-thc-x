@@ -2,7 +2,6 @@ import React from 'react';
 import CountryListItem from './country_list_item';
 
 const CountryList = (props) => {
-  console.log('render called', props);
   if (!props.countrylist) {
     return <div> Waiting... </div>;
   }
@@ -15,7 +14,7 @@ const CountryList = (props) => {
   });
 
   return (
-      <ul className="col-md-4 list-group">
+      <ul className="list-group">
         {countryListItems}
       </ul>
   );

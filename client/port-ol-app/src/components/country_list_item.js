@@ -10,12 +10,10 @@ const CountryListItem = ({country, onCountrySelect}) => {
   return (
     <li onClick={() => onCountrySelect(country)}
     className="list-group-item">
-      <div className="video-list media">
-        <h3> {ccode} </h3>
-      </div>
-      <div>
-        <p> Total data points:  {total} </p>
-        <p> Outliers:  {outliers} </p>
+      <div className="country-item ">
+        <h4> {ccode} </h4>
+        Total data points:  {total} <br />
+        Outliers:  {outliers}
       </div>
     </li>
   );

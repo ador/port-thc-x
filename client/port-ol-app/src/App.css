@@ -1,14 +1,40 @@
+.country-item img {
+  max-width: 64px;
+}
+
+.country-list img {
+  max-width: 64px;
+}
+
+.list-group-item {
+  cursor: pointer;
+}
+
+.histo {
+  padding-top: 50px;
+  padding: 10px;
+  max-width: 630px;
+}
+
+.list-group {
+  align: right;
+}
+
+.list-group-item:hover {
+  background-color: #eee;
+}
+
 .App {
   text-align: center;
 }
 
 .App-logo {
-  height: 80px;
+  height: 70px;
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
+  background-color: #235;
+  height: 155px;
   padding: 20px;
   color: white;
 }

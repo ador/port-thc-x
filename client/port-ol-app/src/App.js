@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import logo from './alogo.png';
 
-import _ from 'lodash'
-//import SimpleBarChart from './SimpleBarChart.js';
 import Chart from './components/chart';
 import CountryList from './components/country_list';
 
@@ -24,24 +22,18 @@ class App extends Component {
     this.updateSelectedCountry = this.updateSelectedCountry.bind(this);
     this.fetchOneCountryHistogram(this.state.selectedcountry);
   }
-  
 
   fetchCallbackHelper(url, callback) {
-    fetch(url, 
+    return fetch(url, 
        {'method': 'GET'}
-       ).then(function(response) { 
-        console.log("Response from fetch is " + response);
-        return response.json();
-    }).then(function(d) {
-      callback(d);
-    });
-
+    ).then(function(response) { 
+          return response.json();
+      })
   }
 
   fetchCountryList() {
-    this.fetchCallbackHelper('/countrydatalist', 
-      (data) => {
-         console.log("CL fetch: " + data.datalist);
+    this.fetchCallbackHelper('/countrydatalist')
+    .then(data => {
          this.setState({
            countrylist: data.datalist,
            selectedcountry: data.datalist[0]
@@ -49,43 +41,41 @@ class App extends Component {
       })
   }
 
-  fetchOneCountryHistogram() {
-    if (! this.state.selectedcountry) {
+  fetchOneCountryHistogram(country) {
+    if (! country) {
       console.log("selected country is null");
     } else {
-      var ccode = this.state.selectedcountry.ccode;
-      this.fetchCallbackHelper('/histogram/' + ccode, 
-        (data) => {
+      var ccode = country.ccode;
+      this.fetchCallbackHelper('/histogram/' + ccode)
+      .then(data => {
            this.setState({
              histogram: data.data
            });
-        })
+      })
     }
   }
 
   updateSelectedCountry(country) {
+    // react picks the setstate up later
     this.setState({selectedcountry: country});
-    this.fetchOneCountryHistogram();
+    this.fetchOneCountryHistogram(country);
   }
 
   render() {
-    // magic_ lodash returns a new function here that can be run only once per 400 millisecs
-    //const videoSearch = _.debounce((term) => {this.search(term)}, 400)
 
     return (
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Outlier detector demo</h2>
-          {this.state.selectedcountry?this.state.selectedcountry.ccode:'* *'}
         </div>
-        <div className="App-intro">
-          <div className="App-intro">
+        <div className="row">
+          <div className="col-sm-3">
             <CountryList 
               onCountrySelect={this.updateSelectedCountry} 
               countrylist={this.state.countrylist} />
           </div>
-          <div className="App-intro">
+          <div className="col-sm-9 histo ">
             <Chart data={this.state.histogram} />
           </div>
         </div>

@@ -6,12 +6,13 @@
     "react-scripts": "0.7.0"
   },
   "dependencies": {
-    "muicss": "^0.9.4",
+    "bootstrap": "^3.3.7",
+    "isomorphic-fetch": "^2.2.1",
     "react": "^15.4.0",
+    "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.0",
     "recharts": "^0.18.0",
-    "whatwg-fetch": "^2.0.1",
-    "isomorphic-fetch": "^2.2.1"
+    "whatwg-fetch": "^2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

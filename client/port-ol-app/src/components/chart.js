@@ -22,7 +22,7 @@ const Chart = (props) => {
   }
 
   return (
-    <BarChart width={800} height={400} data={data}
+    <BarChart width={600} height={400} data={data}
           margin={{top: 5, right: 30, left: 20, bottom: 5}}>
      <XAxis dataKey="label"/>
      <YAxis/>
