@@ -2,16 +2,8 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 
-// new es 6 style
-// use class if the comp will have an inner state
-
-
-// does this have to be class-vbased?
-//  is it anough to be like video_detail?
 const Chart = (props) => {
-  console.log("RENDERING CHART? w props: " + props);
-  console.log("props.data: ")
-  console.log(props.data);
+
   const data = props.data;
 
   if (!data) {
