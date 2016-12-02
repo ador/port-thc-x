@@ -1,4 +1,4 @@
 #!/bin/bash
 
-PYTHONPATH=.:$PYTHONPATH python web/app.py
+PYTHONPATH=.:$PYTHONPATH python3 web/app.py
 
