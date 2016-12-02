@@ -88,6 +88,37 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "localhost:5000/countrydatalist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Body matches string\"] = responseBody.has(\"outlier_num\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/countrydatalist",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "text/plain",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

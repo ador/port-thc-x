@@ -37,6 +37,20 @@ def histogram_for_country(ccode):
     )
 
 
+@app.route('/countrydatalist', methods=['GET', 'OPTIONS'])
+def country_data_list():
+    datalist = poda.get_all_countries_summary_data()
+    return Response(
+        '{ "datalist": ' + str(datalist).replace("'", '"') + '}',
+        mimetype='application/json',
+        content_type='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
+
+
 @app.route('/upload', methods=['POST'])
 def upload_data():
     from flask import request
@@ -44,11 +58,6 @@ def upload_data():
     value = request.get_json().get('value')
     supplier_id = request.get_json().get('supplier_id')
     port = request.get_json().get('port')
-    print("received: ")
-    print("    curr: " + str(currency))
-    print("    value: " + str(value))
-    print("    supplier_id: " + str(supplier_id))
-    print("    port: " + str(port))
     poda.add_dataitem(currency=currency, supplier_id=supplier_id,
                       value=value, port=port)
     return "Thanks"

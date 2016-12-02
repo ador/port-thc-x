@@ -139,3 +139,11 @@ def test_add_data_3():
     # values are sorted by increasing value, so the first will be the outlier
     assert('OUTLIER' == labeled[0]['label'])
 
+
+def test_get_country_datalist():
+    poda = setup_port_data()
+    data = poda.get_all_countries_summary_data()
+    assert(3 == len(data))
+    assert('CN' == data[0]['ccode'])
+    assert(2 == data[0]['outlier_num'])
+    assert(7 == data[0]['normal_num'])

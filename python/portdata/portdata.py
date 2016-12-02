@@ -101,10 +101,10 @@ class PortData (object):
         if cc not in self.labeled_data or cc in self.dirty_ccodes_data:
             self.label_data(cc)
         if -1 == num_bins:
-            datalen = len(self.data_by_country)
-            num_bins = max(min(datalen / 10,
-                               self.settings['min_histogram_bins']),
-                           self.settings['min_histogram_bins'])
+            datalen = len(self.data_by_country[countrycode])
+            num_bins = min(
+                max(datalen // 10, self.settings['min_histogram_bins']),
+                self.settings['max_histogram_bins'])
         self.histograms[cc] = self.create_labeled_histogram(cc, num_bins)
 
     def get_labeled_histogram_for_country(self, countrycode, num_bins=-1):
@@ -178,3 +178,25 @@ class PortData (object):
             value=value, port=port
         )
         self.add_raw_data(ccode, data)
+
+    def aggregate_country_labeled_data(self, countrycode):
+        cc = countrycode
+        datalist = self.labeled_data[cc]
+        to_return = dict()
+        to_return['ccode'] = cc
+        to_return['outlier_num'] = 0
+        to_return['normal_num'] = 0
+        for d in datalist:
+            if d['label'] == 'OK':
+                to_return['normal_num'] += 1
+            elif d['label'] == 'OUTLIER':
+                to_return['outlier_num'] += 1
+        return to_return
+
+    def get_all_countries_summary_data(self):
+        to_return = []
+        for c in self.get_countrycodes():
+            self.label_data(c)
+            aggregated_countrydata = self.aggregate_country_labeled_data(c)
+            to_return.append(aggregated_countrydata)
+        return to_return
