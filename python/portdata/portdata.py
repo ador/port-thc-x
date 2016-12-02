@@ -98,12 +98,13 @@ class PortData (object):
 
     def compute_histogram_for_country(self, countrycode, num_bins=-1):
         cc = countrycode
+        print(str(cc) + " - histo returnned")
         if cc not in self.labeled_data or cc in self.dirty_ccodes_data:
             self.label_data(cc)
         if -1 == num_bins:
             datalen = len(self.data_by_country[countrycode])
             num_bins = min(
-                max(datalen // 10, self.settings['min_histogram_bins']),
+                max(datalen // 5, self.settings['min_histogram_bins']),
                 self.settings['max_histogram_bins'])
         self.histograms[cc] = self.create_labeled_histogram(cc, num_bins)
 
