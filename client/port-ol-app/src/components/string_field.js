@@ -11,7 +11,6 @@ class StringField extends React.Component {
 
   onInputChange(value) {
     this.setState({ value });
-    console.log("from stringfield " + value);
     // calling the callback, passed down from index.js
     this.props.onStringValueChange(value);
   }

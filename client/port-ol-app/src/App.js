@@ -15,13 +15,23 @@ class App extends Component {
     this.state = {
       countrylist: [],
       selectedcountry: null,
-      histogram: []
+      histogram: [],
+      // form field values
+      idVal: 0,
+      portcodeVal: "",
+      currencyVal: "USD",
+      valueVal: "0.0"
     };
     this.fetchCountryList = this.fetchCountryList.bind(this);
-    this.fetchCountryList();
     this.fetchOneCountryHistogram = this.fetchOneCountryHistogram.bind(this);
     this.updateSelectedCountry = this.updateSelectedCountry.bind(this);
-    this.fetchOneCountryHistogram(this.state.selectedcountry);
+    this.updateIdVal = this.updateIdVal.bind(this);
+    this.updatePortcodeVal = this.updatePortcodeVal.bind(this);
+    this.updateCurrencyVal = this.updateCurrencyVal.bind(this);
+    this.updateValueVal = this.updateValueVal.bind(this);
+    this.getCheckedFormData = this.getCheckedFormData.bind(this);
+    this.sendData = this.sendData.bind(this);
+    this.fetchCountryList();
   }
 
   fetchCallbackHelper(url, callback) {
@@ -57,19 +67,59 @@ class App extends Component {
   }
 
   updateSelectedCountry(country) {
-    // react picks the setstate up later
     this.setState({selectedcountry: country});
+    // react picks the setState up a bit later, so
+    // do not use the state in this call, but the param
     this.fetchOneCountryHistogram(country);
   }
 
-  logIt(something) {
-    console.log(something);
+  updateIdVal(value) {
+    this.setState({idVal: parseInt(value)})
+  }
+
+  updatePortcodeVal(value) {
+    this.setState({portcodeVal: value.toUpperCase()})
+  }
+
+  updateCurrencyVal(value) {
+    this.setState({currencyVal: value.toUpperCase()})
+  }
+
+  updateValueVal(value) {
+    this.setState({valueVal: parseFloat(value)})
+  }
+
+  getCheckedFormData() {
+    // TODO : check and fix form data if possible
+    var data = {
+      "currency": this.state.currencyVal,
+      "value": parseFloat(this.state.valueVal),
+      "port": this.state.portcodeVal, 
+      "supplier_id": parseInt(this.state.idVal)
+    }
+    return data;
   }
 
   sendData() {
-    console.log("now we should send data!");
-
+    var toSend = this.getCheckedFormData();
+    console.log("now we should send data:");
+    console.log(toSend);
+    var that = this;
+    fetch("/upload",
+    {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify(toSend)
+    })
+    .then(function(res){ 
+      console.log(res)
+      // refresh country data with the new
+      that.fetchCountryList();
+    }).catch(function(res){ console.log(res) })
   }
+
 
   render() {
 
@@ -92,10 +142,10 @@ class App extends Component {
         <div className="row"> 
           <div className="col-sm-3 ">
             <DataForm 
-                  onIdChange={this.logIt}
-                  onPortChange={this.logIt}
-                  onValChange={this.logIt}
-                  onCurrChange={this.logIt}
+                  onIdChange={this.updateIdVal}
+                  onPortChange={this.updatePortcodeVal}
+                  onValChange={this.updateValueVal}
+                  onCurrChange={this.updateCurrencyVal}
                   onSubmitClick={this.sendData} />
           </div>
         </div>

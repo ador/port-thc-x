@@ -98,7 +98,6 @@ class PortData (object):
 
     def compute_histogram_for_country(self, countrycode, num_bins=-1):
         cc = countrycode
-        print(str(cc) + " - histo returnned")
         if cc not in self.labeled_data or cc in self.dirty_ccodes_data:
             self.label_data(cc)
         if -1 == num_bins:
@@ -152,8 +151,7 @@ class PortData (object):
     def create_labeled_histogram(self, countrycode, num_bins):
         data = self.labeled_data[countrycode]
         # note: we expect this to be sorted!
-        usd_values = [d['usd_val'] for d in data]
-        assert(usd_values == sorted(usd_values))
+        usd_values = sorted([d['usd_val'] for d in data])
         # outlier_idx_list = self.compute_outliers(usd_values)
         (hist_vals, hist_borders) = np.histogram(usd_values, num_bins)
         to_return = []
