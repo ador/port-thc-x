@@ -18,7 +18,7 @@ class NumberField extends React.Component {
   render() {
     return (
       <div className="myfield">
-      <input
+      <input className="form-control input-md"
         value={this.state.value}
         onChange={(e) => this.onInputChange(e.target.value)} />
       </div>

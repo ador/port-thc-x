@@ -6,10 +6,6 @@
   max-width: 64px;
 }
 
-.list-group-item {
-  cursor: pointer;
-}
-
 .histo {
   padding-top: 50px;
   padding: 10px;
@@ -20,8 +16,22 @@
   align: right;
 }
 
+.list-group-item {
+  cursor: pointer;
+}
+
 .list-group-item:hover {
   background-color: #eee;
+}
+
+.submitform {
+  text-align: left;
+  padding: 35px;
+}
+
+.submit {
+  margin:20px;
+  text-align: center;
 }
 
 .App {

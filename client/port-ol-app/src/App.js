@@ -66,6 +66,11 @@ class App extends Component {
     console.log(something);
   }
 
+  sendData() {
+    console.log("now we should send data!");
+
+  }
+
   render() {
 
     return (
@@ -84,12 +89,15 @@ class App extends Component {
             <Chart data={this.state.histogram} />
           </div>
         </div>
-        <div> 
-          <DataForm 
-                onIdChange={this.logIt}
-                onPortChange={this.logIt}
-                onValChange={this.logIt}
-                onCurrChange={this.logIt} />
+        <div className="row"> 
+          <div className="col-sm-3 ">
+            <DataForm 
+                  onIdChange={this.logIt}
+                  onPortChange={this.logIt}
+                  onValChange={this.logIt}
+                  onCurrChange={this.logIt}
+                  onSubmitClick={this.sendData} />
+          </div>
         </div>
       </div>
     );
