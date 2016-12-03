@@ -3,6 +3,7 @@ import logo from './alogo.png';
 
 import Chart from './components/chart';
 import CountryList from './components/country_list';
+import DataForm from './components/data_form'
 
 // TODO have a component for each input field of the "form" to send in new data 
 
@@ -61,6 +62,10 @@ class App extends Component {
     this.fetchOneCountryHistogram(country);
   }
 
+  logIt(something) {
+    console.log(something);
+  }
+
   render() {
 
     return (
@@ -78,6 +83,13 @@ class App extends Component {
           <div className="col-sm-9 histo ">
             <Chart data={this.state.histogram} />
           </div>
+        </div>
+        <div> 
+          <DataForm 
+                onIdChange={this.logIt}
+                onPortChange={this.logIt}
+                onValChange={this.logIt}
+                onCurrChange={this.logIt} />
         </div>
       </div>
     );
