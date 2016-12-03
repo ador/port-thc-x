@@ -53,7 +53,7 @@ class RateFetcher (object):
 
     def update_rates(self):
         rates_file = open(self.rates_file_name, 'w')
-        new_rates = download_and_save_rates(rates_file)
+        new_rates = self.download_and_save_rates(rates_file)
         self.rates = new_rates
 
     def download_and_save_rates(self, outfile):
