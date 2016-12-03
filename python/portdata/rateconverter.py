@@ -43,4 +43,11 @@ class RateConverter (object):
         if from_currency == "USD":
             return round(value, self.precision)
         else:
-            return round(1.0 * value / self.rates[from_currency], self.precision)
+            if from_currency in self.rates:
+                return round(1.0 * value / self.rates[from_currency],
+                             self.precision)
+            else:
+                # TODO : better error handling
+                print("Could not convert from unknown currency: " +
+                      from_currency)
+                return round(value, self.precision)
