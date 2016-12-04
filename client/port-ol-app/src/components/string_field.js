@@ -5,8 +5,11 @@ class StringField extends React.Component {
 
   constructor(props) {
     super(props); // needed
-
-    this.state = {value: ''}
+    if (props.defaultValue) {
+      this.state = {value: props.defaultValue}
+    } else {
+      this.state = {value: ''}
+    }
   }
 
   onInputChange(value) {

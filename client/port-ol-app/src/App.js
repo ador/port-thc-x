@@ -3,9 +3,10 @@ import logo from './alogo.png';
 
 import Chart from './components/chart';
 import CountryList from './components/country_list';
-import DataForm from './components/data_form'
-
-// TODO have a component for each input field of the "form" to send in new data 
+import DataForm from './components/data_form';
+import Alert from 'react-s-alert';
+import 'react-s-alert/dist/s-alert-default.css';
+import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 
 class App extends Component { 
 
@@ -20,8 +21,10 @@ class App extends Component {
       idVal: 0,
       portcodeVal: "",
       currencyVal: "USD",
-      valueVal: "0.0"
+      valueVal: 0.0
     };
+
+    // binding functions
     this.fetchCountryList = this.fetchCountryList.bind(this);
     this.fetchOneCountryHistogram = this.fetchOneCountryHistogram.bind(this);
     this.updateSelectedCountry = this.updateSelectedCountry.bind(this);
@@ -30,7 +33,9 @@ class App extends Component {
     this.updateCurrencyVal = this.updateCurrencyVal.bind(this);
     this.updateValueVal = this.updateValueVal.bind(this);
     this.getCheckedFormData = this.getCheckedFormData.bind(this);
+    this.alertError = this.alertError.bind(this);
     this.sendData = this.sendData.bind(this);
+
     this.fetchCountryList();
   }
 
@@ -68,13 +73,11 @@ class App extends Component {
 
   updateSelectedCountry(country) {
     this.setState({selectedcountry: country});
-    // react picks the setState up a bit later, so
-    // do not use the state in this call, but the param
     this.fetchOneCountryHistogram(country);
   }
 
   updateIdVal(value) {
-    this.setState({idVal: parseInt(value)})
+    this.setState({idVal: parseInt(value, 10)})
   }
 
   updatePortcodeVal(value) {
@@ -89,35 +92,113 @@ class App extends Component {
     this.setState({valueVal: parseFloat(value)})
   }
 
-  getCheckedFormData() {
-    // TODO : check and fix form data if possible
-    var data = {
-      "currency": this.state.currencyVal,
-      "value": parseFloat(this.state.valueVal),
-      "port": this.state.portcodeVal, 
-      "supplier_id": parseInt(this.state.idVal)
+  alertError(msg){
+    Alert.error(msg, {
+          position: 'bottom-left',
+          effect: 'slide',
+          timeout: 3000
+        });
+  }
+
+  checkValue(val) {
+    if (!val) {
+      this.alertError('Please fill Value (number)');
+      return false;
+    } else {
+      if (typeof val !== "number" || val < 0) {
+        this.alertError('Value must be a positive number');
+        return false;
+      }
     }
-    return data;
+    return true;
+  }
+
+  checkCurrency(currency) {
+    if (!currency) {
+      this.alertError('Please fill Currency (3-letter code)');
+      return false;
+    }
+    if (!currency.match(/^[A-Z][A-Z][A-Z]$/)) {
+      this.alertError('Currency must be a 3-letter string containing just letters A-Z');
+      return false;
+    }
+    return true;
+  }
+
+  checkPortcode(portcode) {
+    if (!portcode) {
+      this.alertError('Please fill Port code (5-letter code)');
+      return false;
+    }
+    if (!portcode.match(/^[A-Z][A-Z][A-Z][A-Z][A-Z]$/)) {
+      this.alertError('Port code must be a 5-letter string containing just letters A-Z');
+      return false;
+    }
+    return true;
+  }
+
+  checkId(id) {
+    if (!id) {
+      this.alertError('Please fill Supplier ID code (integer)');
+      return false;
+    }
+    if (id < 0) {
+      this.alertError('Supplier ID must be a positive integer');
+      return false;
+    }
+    return true;
+  }
+
+
+  getCheckedFormData() {
+    // TODO: more scrict checks
+    //console.log("checkformdata")
+    if (this.checkCurrency(this.state.currencyVal) && 
+        this.checkValue(this.state.valueVal) &&
+        this.checkPortcode(this.state.portcodeVal) &&
+        this.checkId(this.state.idVal)) {
+      var data = {
+        "currency": this.state.currencyVal,
+        "value": parseFloat(this.state.valueVal),
+        "port": this.state.portcodeVal, 
+        "supplier_id": parseInt(this.state.idVal, 10)
+      }
+      return data;
+    } else {
+     return null;
+    }
   }
 
   sendData() {
     var toSend = this.getCheckedFormData();
-    console.log("now we should send data:");
-    console.log(toSend);
-    var that = this;
-    fetch("/upload",
-    {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: "POST",
-        body: JSON.stringify(toSend)
-    })
-    .then(function(res){ 
-      console.log(res)
-      // refresh country data with the new
-      that.fetchCountryList();
-    }).catch(function(res){ console.log(res) })
+    if (toSend) {
+      var that = this;
+      fetch("/upload",
+      {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          method: "POST",
+          body: JSON.stringify(toSend)
+      })
+      .then(function(res){ 
+        if (res.ok) {
+          Alert.success('Data has been received by the server', {
+            position: 'bottom-left',
+            effect: 'slide',
+            timeout: 1500
+          });
+          // refresh country data with the new
+          that.fetchCountryList();
+        } else {
+          Alert.error('The server could not accept the data', {
+            position: 'bottom-left',
+            effect: 'slide',
+            timeout: 2000
+          });
+        }
+      }).catch(function(res){ console.log(res) })
+    }
   }
 
 
@@ -146,9 +227,11 @@ class App extends Component {
                   onPortChange={this.updatePortcodeVal}
                   onValChange={this.updateValueVal}
                   onCurrChange={this.updateCurrencyVal}
+                  defaultCurrency={this.state.currencyVal}
                   onSubmitClick={this.sendData} />
           </div>
         </div>
+        <Alert stack={{limit: 3}} />
       </div>
     );
   }

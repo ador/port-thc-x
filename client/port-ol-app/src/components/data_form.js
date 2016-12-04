@@ -12,7 +12,8 @@ class DataForm extends React.Component {
         <ul className="list-group">
           <li> Supplier ID: <NumberField onNumberValueChange={this.props.onIdChange}/> </li>
           <li> Port code: <StringField onStringValueChange={this.props.onPortChange}/> </li>
-          <li> Currency: <StringField onStringValueChange={this.props.onCurrChange}/> </li>
+          <li> Currency: <StringField onStringValueChange={this.props.onCurrChange} 
+                                      defaultValue={this.props.defaultCurrency}/> </li>
           <li> Value: <NumberField onNumberValueChange={this.props.onValChange}/> </li>
           <li onClick={() => this.props.onSubmitClick()} 
               className="myfield list-group-item submit"> SUBMIT </li>
@@ -27,7 +28,8 @@ DataForm.propTypes = {
   onPortChange: React.PropTypes.func.isRequired,
   onValChange: React.PropTypes.func.isRequired,
   onCurrChange: React.PropTypes.func.isRequired,
-  onSubmitClick: React.PropTypes.func.isRequired
+  onSubmitClick: React.PropTypes.func.isRequired,
+  defaultCurrency: React.PropTypes.string.isRequired
 };
 
 export default DataForm
