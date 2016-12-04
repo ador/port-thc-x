@@ -8,6 +8,7 @@ Finding outliers in ports' terminal handling charges (demo project).
 
 ```
 $ cd python 
+$ pip3 install -r requirements.txt
 $ ./run_server.sh
 ```
 
