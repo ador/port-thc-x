@@ -41,6 +41,7 @@ It should be something like:
 
 ```
 $ cd client/port-ol-app
+$ npm install
 $ npm start
 ```
 
