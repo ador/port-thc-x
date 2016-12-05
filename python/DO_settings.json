@@ -1,9 +1,18 @@
 {
-    "common_path" : "/home/yoda/port-thc-x/",
-    "datafile": "data/sample_data_1.json",
+    "test_mode": false,
+    "common_path": "/home/yoda/port-thc-x/data/",
+    "datafile": "sample_data_real.json",
     "max_outlier_percent": 33,
-    "min_histogram_bins" : 3,
-    "max_histogram_bins" :50,
+    "min_histogram_bins": 3,
+    "max_histogram_bins":50,
 
-    "currency_list_file" : "data/currencies_openexchange_1480071608.json"
+    "fallback_currency_file": "currencies_for_test.json",
+    "refreshed_currency_file": "latest_exchangerates.json",
+    "currency_conversion_precision": 2,
+
+    "fetch_rates": {
+        "base_url": "https://openexchangerates.org/api/latest.json",
+        "app_id": "2d91dd91a7e54c4b927890115c7f6241",
+        "refresh_seconds": 86400
+    }
 }
