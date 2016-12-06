@@ -1,6 +1,6 @@
 from portdata.portdata import PortData
 import os
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from flask import Flask, Response
 
 
@@ -18,7 +18,6 @@ def setup_port_data():
 
 
 @app.route('/', methods=['GET', 'OPTIONS'])
-@cross_origin(origin='*', headers=['Content-Type'])
 def hello_world():
     return 'Hello, World!'
 
@@ -31,8 +30,7 @@ def histogram_for_country(ccode):
         mimetype='application/json',
         content_type='application/json',
         headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
+            'Cache-Control': 'no-cache'
         }
     )
 
@@ -45,8 +43,7 @@ def country_data_list():
         mimetype='application/json',
         content_type='application/json',
         headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
+            'Cache-Control': 'no-cache'
         }
     )
 
@@ -54,7 +51,7 @@ def country_data_list():
 @app.route('/upload', methods=['POST'])
 def upload_data():
     from flask import request
-    currency = request.get_json().get('currency', '')
+    currency = request.get_json().get('currency')
     value = request.get_json().get('value')
     supplier_id = request.get_json().get('supplier_id')
     port = request.get_json().get('port')
@@ -64,6 +61,5 @@ def upload_data():
 
 
 if __name__ == '__main__':
-    # get the path of this script, to use relative paths from here
     poda = setup_port_data()
     app.run(debug=True, host='0.0.0.0')
