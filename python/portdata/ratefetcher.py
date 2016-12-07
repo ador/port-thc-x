@@ -4,6 +4,10 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 
 class RateFetcher (object):
+    """ Fetches currency exchange rates from a URL (that is defined in a
+        configuration file). The new rates are stored in a file (JSON),
+        as well as kept in memory.
+    """
 
     def __init__(self):
         self.settings = None

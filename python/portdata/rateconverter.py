@@ -40,6 +40,7 @@ class RateConverter (object):
         self.rates = self.fetcher.get_rates()
 
     def convert_to_usd(self, from_currency, value):
+        self.refresh_rate_values()
         if from_currency == "USD":
             return round(value, self.precision)
         else:
