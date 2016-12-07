@@ -154,7 +154,6 @@ class PortData (object):
         data = self.labeled_data[countrycode]
         # note: we expect this to be sorted!
         usd_values = sorted([d['usd_val'] for d in data])
-        # outlier_idx_list = self.compute_outliers(usd_values)
         (hist_vals, hist_borders) = np.histogram(usd_values, num_bins)
         to_return = []
         for i in range(len(hist_borders) - 2):
