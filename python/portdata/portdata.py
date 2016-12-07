@@ -6,12 +6,14 @@ import numpy as np
 
 class PortData (object):
 
+    MIN_DATASIZE_FOR_OLDETECT = 7
+    OUTLIER_LABEL = 'OUTLIER'
+    NORMAL_LABEL = 'OK'
+
     def __init__(self):
         self.settings = None
         self.countrycodes = set([])
-        self.last_rates_timestamp = 0  # todo
         self.orig_data = dict()
-        self.min_datasize_for_OLdetection = 7
         # the following dictionaries' key is countrycode
         # and the value is a sorted list (by usd_value) of data items
         self.data_by_country = dict()
@@ -68,14 +70,14 @@ class PortData (object):
         # data to be labeled
         datalist = self.get_orig_data_for_country(countrycode)
         labeled_data = []
-        # default: OK
+        # default label: normal (not outlier)
         for data in datalist:
-            data['label'] = 'OK'
+            data['label'] = self.NORMAL_LABEL
             data['usd_val'] = self.compute_usd_value(data['currency'],
                                                      data['value'])
             labeled_data.append(data)
         # only try to find outliers if we have a handful of datapoints at least
-        if len(datalist) >= self.min_datasize_for_OLdetection:
+        if len(datalist) >= self.MIN_DATASIZE_FOR_OLDETECT:
             # reorder labeled_data list based on usd_value
             labeled_data_sorted = sorted(
                 labeled_data, key=lambda data: data['usd_val'])
@@ -83,7 +85,7 @@ class PortData (object):
             outlier_indices = self.compute_outliers(usd_values)
             # re-label outliers:
             for i in outlier_indices:
-                labeled_data_sorted[i]['label'] = 'OUTLIER'
+                labeled_data_sorted[i]['label'] = self.OUTLIER_LABEL
             self.labeled_data[countrycode] = labeled_data_sorted
         else:
             self.labeled_data[countrycode] = labeled_data
@@ -115,22 +117,22 @@ class PortData (object):
     def num_outliers_in_hist_col(self, minval, maxval, data):
         return len([x for x in data if (x['usd_val'] >= minval and
                                         x['usd_val'] < maxval and
-                                        x['label'] == 'OUTLIER')])
+                                        x['label'] == self.OUTLIER_LABEL)])
 
     def num_outliers_in_last_hist_col(self, minval, maxval, data):
         return len([x for x in data if (x['usd_val'] >= minval and
                                         x['usd_val'] <= maxval and
-                                        x['label'] == 'OUTLIER')])
+                                        x['label'] == self.OUTLIER_LABEL)])
 
     def num_normals_in_hist_col(self, minval, maxval, data):
         return len([x for x in data if (x['usd_val'] >= minval and
                                         x['usd_val'] < maxval and
-                                        x['label'] == 'OK')])
+                                        x['label'] == self.NORMAL_LABEL)])
 
     def num_normals_in_last_hist_col(self, minval, maxval, data):
         return len([x for x in data if (x['usd_val'] >= minval and
                                         x['usd_val'] <= maxval and
-                                        x['label'] == 'OK')])
+                                        x['label'] == self.NORMAL_LABEL)])
 
     def histo_column(self, minval, maxval, data):
         d = dict()
@@ -186,9 +188,9 @@ class PortData (object):
         to_return['outlier_num'] = 0
         to_return['normal_num'] = 0
         for d in datalist:
-            if d['label'] == 'OK':
+            if d['label'] == self.NORMAL_LABEL:
                 to_return['normal_num'] += 1
-            elif d['label'] == 'OUTLIER':
+            elif d['label'] == self.OUTLIER_LABEL:
                 to_return['outlier_num'] += 1
         return to_return
 
