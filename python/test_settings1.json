@@ -1,6 +1,6 @@
 {
     "test_mode": true,
-    "common_path": "/home/adri/hub/port-thc-x/data/",
+    "common_path": "/home/user123/repo/port-thc-x/data/",
     "datafile": "sample_data_1.json",
     "max_outlier_percent": 33,
     "min_histogram_bins": 3,

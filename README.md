@@ -5,10 +5,16 @@ Finding outliers in ports' terminal handling charges (demo project).
 
 ## How to start a dev server (Flask)
 
+Install the dependencies: 
 
 ```
 $ cd python 
 $ pip3 install -r requirements.txt
+```
+
+Edit the 'common_path' property in file 'python/test_settings1.json', to point to your repo in your local filesystem. Then start:
+
+```
 $ ./run_server.sh
 ```
 
